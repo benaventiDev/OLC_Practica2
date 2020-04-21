@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" rel="stylesheet">
+    <style>
+
+        #divheight{
+            height: 400px;
+            width: 650px;
+        }
+
+        .nav-tabs > li .close {
+            margin: -2px 0 0 10px;
+            font-size: 18px;
+        }
+
+
+
+    </style>
+    <title>Hello, world!</title>
+</head>
+<body>
+<div class="container">
+
+    <div class="row">
+        <div class="col col-lg-3">
+            <input type="file" class="form-control-file" id="input"
+                   accept=".doc,.java,.lex,.jcup,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+        </div>
+        <div class="col">
+            <button class="btn btn-success" id="new-button" type="button">New</button>
+            <button class="btn btn-success" id="test-button" type="button">Test</button>
+            <button class="btn btn-success" id="reports-buttons" type="button">Reports</button>
+        </div>
+    </div>
+    <div id="divheight">
+
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-tabs nav-pills" id="tab-textsAreas"><li class="nav-item">
+                    <a class="nav-link active" id="tabTitle111" data-toggle="pill" href="#text-area-container1" role="tab" aria-controls="text-area-container1" aria-selected="true"><button class="close closeTab" type="button" >×</button>New</a>
+                </li></ul>
+                <div class="tab-content" id="content-textAreas"><div class="tab-pane fade active show" id="text-area-container1" role="tabpanel" aria-labelledby="pills-profile-tab">
+                    <form>
+                        <div class="form-group">
+                            <textarea style="height: 400px" class="form-control text-area-content" id="text-area1" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div></div>
+            </div>
+        </div>
+
+<!--ici-->
+
+
+<!--
+        <div class="row">
+            <div class="col">
+                <ul class="nav nav-tabs nav-pills" id="tab-textsAreas"></ul>
+                <div class="tab-content" id="content-textAreas"></div>
+            </div>
+        </div> -->
+        <!-- -->
+    </div>
+
+
+</div>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script crossorigin="anonymous" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+<script crossorigin="anonymous" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+
+<script src="Lexer.js"></script>
+<script>
+    let tabsCounter = 0;
+    $(function () {
+        //on ready function
+
+        document.getElementById('input').addEventListener('change', readFileAsString);
+        registerCloseEvent();
+        /*
+        $('#input').change(function(e){
+            var fileName = e.target.files[0].name;
+            //alert('The file "' + fileName +  '" has been selected.');
+            console.log(e.target.result);
+        });
+        */
+    });
+
+    $("#test-button").click(function () {
+        test();
+    });
+
+    function test() {
+        LexerTest()
+    }
+
+
+    function readFileAsString() {
+        tabsCounter++;
+        let files = this.files;
+        if (files.length === 0) {
+            alert('No file is selected');
+            return;
+        }
+        $("#tab-textsAreas").append("<li class=\"nav-item\">\n" +
+            "                    <a class=\"nav-link\" id=\"" + "tabTitle" + tabsCounter + "\" data-toggle=\"pill\" href=\"#text-area-container" + tabsCounter + "\" role=\"tab\" aria-controls=\"text-area-container" + tabsCounter + "\" aria-selected=\"false\">" +
+        "<button class=\"close closeTab\" type=\"button\" >×</button>" +
+            + files[0].name + "</a>\n" +
+            "                </li>")
+        $("#content-textAreas").append( // show active
+            "<div class=\"tab-pane fade\"  id=\"text-area-container" + tabsCounter + "\" role=\"tabpanel\" aria-labelledby=\"pills-profile-tab\">\n" +
+            "                    <form>\n" +
+            "                        <div class=\"form-group\">\n" +
+            "                            <textarea style=\"height: 400px\" class=\"form-control text-area-content\" id=\"" + "text-area" + tabsCounter + "\" rows=\"3\" style='height: 450px'></textarea>\n" +
+            "                        </div>\n" +
+            "                    </form>\n" +
+            "                </div>"
+        );
+        $(".nav-tabs a[href=\"#text-area-container" + tabsCounter + "\"]").tab('show');
+
+        let reader = new FileReader();
+        reader.onload = function (event) {
+            document.getElementById("text-area" + tabsCounter).value = event.target.result;
+        };
+        reader.readAsText(files[0]);
+        registerCloseEvent();
+    }
+
+    $("#new-button").click(function () {
+        tabsCounter++;
+        $("#tab-textsAreas").append("<li class=\"nav-item\">\n" +
+            "                    <a class=\"nav-link\" id=\"" + "tabTitle" + tabsCounter + "\" data-toggle=\"pill\" href=\"#text-area-container" + tabsCounter + "\" role=\"tab\" aria-controls=\"text-area-container" + tabsCounter + "\" aria-selected=\"false\">" +
+            "<button class=\"close closeTab\" type=\"button\" >×</button>" +
+            "New</a>\n" +
+            "                </li>")
+        $("#content-textAreas").append( // show active
+            "<div class=\"tab-pane fade\" id=\"text-area-container" + tabsCounter + "\" role=\"tabpanel\" aria-labelledby=\"pills-profile-tab\">\n" +
+            "                    <form>\n" +
+            "                        <div class=\"form-group\">\n" +
+            "                            <textarea style=\"height: 400px\" class=\"form-control text-area-content\" id=\"" + "text-area" + tabsCounter + "\" rows=\"3\"></textarea>\n" +
+            "                        </div>\n" +
+            "                    </form>\n" +
+            "                </div>"
+        );
+        $(".nav-tabs a[href=\"#text-area-container" + tabsCounter + "\"]").tab('show');
+        registerCloseEvent();
+    });
+
+
+
+    //this method will register event on close icon on the tab..
+    function registerCloseEvent() {
+        $(".closeTab").click(function () {
+            //there are multiple elements which has .closeTab icon so close the tab whose close icon is clicked
+            var tabContentId = $(this).parent().attr("href");
+            $(this).parent().parent().remove(); //remove li of tab
+            $(tabContentId).remove(); //remove respective tab content
+
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>
